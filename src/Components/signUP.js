@@ -1,53 +1,72 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import * as firebase from "firebase";
 
 class Register extends Component {
+  state = {
+    fullname: "",
+    email: "",
+    password: ""
+  };
   constructor(props) {
     super(props);
-
-    this.state = {
-      fullname: "",
-      email: "",
-      password: ""
-    };
-
-    this.update = this.update.bind(this);
-
-    this.displayLogin = this.displayLogin.bind(this);
   }
+  handleChange = e => {
+    let key = e.target.name;
 
-  update(e) {
-    let name = e.target.name;
-    let value = e.target.value;
     this.setState({
-      [name]: value
+      [key]: e.target.value
     });
-  }
+  };
 
-  displayLogin(e) {
-    e.preventDefault();
-    console.log("You have successfully registered");
-    console.log(this.state);
-    this.setState({
-      fullname: "",
-      email: "",
-      password: ""
-    });
-  }
+  addUser = () => {
+    const { email, username, password } = this.state;
+
+    const db = firebase.firestore();
+
+    console.log(email, password, "email,password");
+
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        let user = firebase.auth().currentUser;
+        db.collection("users")
+          .doc(user.uid)
+          .set({
+            Email: email,
+            Username: username
+          })
+          .then(docRef => {})
+          .catch(function(error) {
+            console.error("Error adding document: ", error);
+          });
+      })
+      .catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(error);
+        alert(errorCode);
+        // ...
+      });
+  };
 
   render() {
+    let { email, password, username } = this.state;
     return (
       <div className="register">
-        <form onSubmit={this.displayLogin}>
-          <h2>Register</h2>
+        {/* <form onSubmit={this.displayLogin}> */}
+        <div>
+          <h2>Sign Up</h2>
 
           <div className="name">
             <input
               type="text"
               placeholder="Full Name"
               name="fullname"
-              value={this.state.fullname}
-              onChange={this.update}
+              // value={this.state.fullname}
+              onChange={this.handleChange}
             />
           </div>
 
@@ -56,8 +75,8 @@ class Register extends Component {
               type="text"
               placeholder="Enter your email"
               name="email"
-              value={this.state.email}
-              onChange={this.update}
+              // value={this.state.email}
+              onChange={this.handleChange}
             />
           </div>
 
@@ -66,8 +85,8 @@ class Register extends Component {
               type="password"
               placeholder="Password"
               name="password"
-              value={this.state.password}
-              onChange={this.update}
+              // value={this.state.password}
+              onChange={this.handleChange}
             />
           </div>
 
@@ -76,13 +95,14 @@ class Register extends Component {
               type="password"
               placeholder="Confirm Password"
               name="password1"
+              onChange={this.handleChange}
             />
           </div>
 
-          <input type="submit" value="Login" />
-        </form>
-
-        <Link to="/">Login Here</Link>
+          {/* </form> */}
+          <Link to="/">Login Here</Link>
+          <button onClick={this.addUser}>Sign up</button>
+        </div>
       </div>
     );
   }

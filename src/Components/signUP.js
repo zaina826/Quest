@@ -100,7 +100,7 @@ class Register extends Component {
           </div>
 
           {/* </form> */}
-          <Link to="/">Login Here</Link>
+          <Link to="/login">Login Here</Link>
           <button onClick={this.addUser}>Sign up</button>
         </div>
       </div>

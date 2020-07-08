@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import logo from "./logo.svg";
-import Login from "./Components/login";
-import Register from "./Components/signUP";
+// import Login from "./Components/login";
+// import Register from "./Components/signUP";
 import "./App.css";
 import { render } from "@testing-library/react";
 import Navbar from "./Components/navbar.jsx";

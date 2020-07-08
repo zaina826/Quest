@@ -1,29 +1,88 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@material-ui/core";
-import firebase from "./firebase"
-function Register() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [name, setname] = useState("")
-  return (
-    <div>
-      <input value={email} onChange={e => setEmail(e.target.value)} />
-      <input value={password} onChange={e => setPassword(e.target.value)} />
-      <input value={name} onChange={e => setname(e.target.value)} />
 
-      <Button onClick={onRegister}>Create account</Button>
-    </div>
-  )
-  async function onRegister() {
-    try {
-      await firebase.register(name, email, password)
-      await firebase.addName(name)
-      props.history.replace('home')
-    } catch (error) {
-      alert(error.message)
-    }
+class Register extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      fullname: "",
+      email: "",
+      password: ""
+    };
+
+    this.update = this.update.bind(this);
+
+    this.displayLogin = this.displayLogin.bind(this);
   }
 
+  update(e) {
+    let name = e.target.name;
+    let value = e.target.value;
+    this.setState({
+      [name]: value
+    });
+  }
+
+  displayLogin(e) {
+    e.preventDefault();
+    console.log("You have successfully registered");
+    console.log(this.state);
+    this.setState({
+      fullname: "",
+      email: "",
+      password: ""
+    });
+  }
+
+  render() {
+    return (
+      <div className="register">
+        <form onSubmit={this.displayLogin}>
+          <h2>Register</h2>
+
+          <div className="name">
+            <input
+              type="text"
+              placeholder="Full Name"
+              name="fullname"
+              value={this.state.fullname}
+              onChange={this.update}
+            />
+          </div>
+
+          <div className="email">
+            <input
+              type="text"
+              placeholder="Enter your email"
+              name="email"
+              value={this.state.email}
+              onChange={this.update}
+            />
+          </div>
+
+          <div className="pasword">
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              value={this.state.password}
+              onChange={this.update}
+            />
+          </div>
+
+          <div className="password">
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              name="password1"
+            />
+          </div>
+
+        </form>
+      </div>
+    );
+  }
 }
-export default Register
+
+export default Register;
